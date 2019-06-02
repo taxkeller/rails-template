@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - 13306:3306
+    volumes:
+      - .data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: myapp_development
+      MYSQL_USER: 'root'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_PASSWORD: ''
+      MYSQL_ROOT_PASSWORD: ''
+    command: ['mysqld', '--character-set-server=utf8mb4']
+  web:
+    build: .
+    #command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    environment:
+      DATABASE_HOST: 'db'
